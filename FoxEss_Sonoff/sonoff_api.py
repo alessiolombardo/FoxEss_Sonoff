@@ -9,7 +9,7 @@ from Crypto.Hash import MD5
 from Crypto.Random import get_random_bytes
 from enum import Enum
 
-from FoxEss_Sonoff import main
+from FoxEss_Sonoff import settings
 
 SONOFF_SWITCH_URI = "/zeroconf/switch"
 SONOFF_INFO_URI = "/zeroconf/info"
@@ -26,13 +26,13 @@ class SonoffApi:
     state = None
 
     @staticmethod
-    def getsonoff(sonoff_type: SonoffModel, init: bool = True):
+    def getsonoff(sonoff_type: SonoffModel, init: bool = True) -> None:
         if sonoff_type == SonoffModel.BASIC_R2:
-            return SonoffBasicApi(main.sonoffDeviceHost, main.sonoffDeviceId, main.sonoffDeviceKey, init)
+            return SonoffBasicApi(settings.sonoffDeviceHost, settings.sonoffDeviceId, settings.sonoffDeviceKey, init)
         elif sonoff_type == SonoffModel.BASIC_R3:
-            return SonoffBasicApi(main.sonoffDeviceHost, main.sonoffDeviceId, main.sonoffDeviceKey, init)
+            return SonoffBasicApi(settings.sonoffDeviceHost, settings.sonoffDeviceId, settings.sonoffDeviceKey, init)
         elif sonoff_type == SonoffModel.BASIC_R3_DIY:
-            return SonoffBasicDiyApi(main.sonoffDeviceHost, main.sonoffDeviceId, main.sonoffDeviceKey, init)
+            return SonoffBasicDiyApi(settings.sonoffDeviceHost, settings.sonoffDeviceId, settings.sonoffDeviceKey, init)
         return None
 
     def __init__(self, dev_host: str, dev_id: str, dev_key: str) -> None:

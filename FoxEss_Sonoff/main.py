@@ -10,7 +10,8 @@ from threading import Thread
 from datetime import datetime, timedelta
 
 sys.path.append('../')
-from FoxEss_Sonoff.settings import *
+from FoxEss_Sonoff.settings import LOG_FILENAME, TIMESTEP, WEB_LOG_PORT, FEED_IN_MIN, SOLAR_PROD_MIN, BAT_DISCARGE_MAX, SOC_MIN
+from FoxEss_Sonoff.settings import sonoffDeviceType, foxEssUsername, foxEssMd5Password, foxEssDeviceId
 from FoxEss_Sonoff import fox_cloud_api, web_log
 from FoxEss_Sonoff.sonoff_api import SonoffApi, SonoffModel
 
@@ -37,13 +38,13 @@ def main():
 
     while True:
 
-        now_minus_5_min = datetime.now() - timedelta(minutes=5)
+        now_minus_timedelta = datetime.now() - timedelta(minutes=TIMESTEP)
         query = {
             "deviceId": foxEssDeviceId,
             "variables": variables,
             "timespan": "hour",
-            "beginDate": {"year": now_minus_5_min.year, "month": now_minus_5_min.month, "day": now_minus_5_min.day,
-                          "hour": now_minus_5_min.hour}
+            "beginDate": {"year": now_minus_timedelta.year, "month": now_minus_timedelta.month, "day": now_minus_timedelta.day,
+                          "hour": now_minus_timedelta.hour}
         }
 
         try:
@@ -67,7 +68,11 @@ def main():
                 sonoff.switch_off()
 
         except Exception as ex:
-            logging.error(ex)
+            logging.error(type(ex).__name__ if not str(ex) else ex)          
+            if type(ex).__name__=="TimeoutError":
+                logging.warning("Wait 5 seconds and Retry")
+                time.sleep(5)
+                continue
 
         time.sleep(TIMESTEP * 60)
 
@@ -75,10 +80,14 @@ def main():
 
 
 def web():
-    web_log.app.run(host='0.0.0.0', port='80')
+    web_log.app.run(host='0.0.0.0', port=WEB_LOG_PORT)
 
 
 if __name__ == '__main__':
-    Thread(target=web).start()
+    t1=Thread(target=web)
+    t1.start()
     time.sleep(1)
-    Thread(target=main).start()
+    t2=Thread(target=main)
+    t2.start()
+    t1.join()
+    t2.join()
