@@ -2,6 +2,7 @@
 LOG_FILENAME = "log.txt"
 TIMESTEP = 5  # minutes
 WEB_LOG_PORT = 80
+WEB_LOG_MAX_LEN = 1000
 
 # FoxEss login settings
 foxEssUsername = "USERNAME"

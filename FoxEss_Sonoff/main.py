@@ -16,7 +16,7 @@ from FoxEss_Sonoff import fox_cloud_api, web_log
 from FoxEss_Sonoff.sonoff_api import SonoffApi, SonoffModel
 
 sonoffDeviceType = SonoffModel[sonoffDeviceType]
-logFile = f"{os.path.dirname(os.path.realpath(__file__))}\\{LOG_FILENAME}"
+logFile = f"{os.path.dirname(os.path.realpath(__file__))}//{LOG_FILENAME}"
 
 h_file = logging.FileHandler(logFile)
 h_file.setFormatter(coloredlogs.ColoredFormatter(format('%(asctime)s | %(levelname)7s | %(message)s')))

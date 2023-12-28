@@ -1,14 +1,16 @@
+from collections import deque
 from ansi2html import Ansi2HTMLConverter
 from flask import Flask, redirect
 
-from FoxEss_Sonoff import main, sonoff_api
+from FoxEss_Sonoff import main
+from FoxEss_Sonoff.sonoff_api import SonoffApi
+from FoxEss_Sonoff.settings import WEB_LOG_MAX_LEN
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def web():
-    file = open(main.logFile, mode='r')
 
     return """
         <html>
@@ -30,7 +32,7 @@ def web():
                 </style>
             </head>
             <body>
-                <h1>SONOFF BASIC - CURRENT STATE: """ + ("ON" if sonoff_api.SonoffApi.state else "OFF") + """</h1>
+                <h1>SONOFF BASIC - CURRENT STATE: """ + ("ON" if SonoffApi.state else "OFF") + """</h1>
                 <p>
                 <div class="flex-parent">
                     <a class="button button-on" href="/switch/on">ON</a>
@@ -39,21 +41,29 @@ def web():
                 </p>
                 <style>
                     ul#console {font-family: "Courier New";padding-left: 5px;text-align: left;color: black;}      
-                </style><ul id="console">""" + Ansi2HTMLConverter(scheme="ansi2html").convert(file.read()).replace(
-        "class=\"body_foreground body_background\"", "") + """<ul>
+                </style>
+                <ul id="console">
+                """ + Ansi2HTMLConverter(scheme="ansi2html").convert(tail(main.logFile,WEB_LOG_MAX_LEN)).replace(
+                    "class=\"body_foreground body_background\"", "") + """
+                <ul>
             </body>
         </html>"""
 
 
 @app.route('/switch/on')
 def switch_on():
-    sonoff = sonoff_api.SonoffApi.getsonoff(main.sonoffDeviceType, init=False)
+    sonoff = SonoffApi.getsonoff(main.sonoffDeviceType, init=False)
     sonoff.switch_on()
     return redirect("/")
 
 
 @app.route('/switch/off')
 def switch_off():
-    sonoff = sonoff_api.SonoffApi.getsonoff(main.sonoffDeviceType, init=False)
+    sonoff = SonoffApi.getsonoff(main.sonoffDeviceType, init=False)
     sonoff.switch_off()
     return redirect("/")
+
+
+def tail(filename, n=100):
+    with open(filename) as f:
+        return str("".join(deque(f, n)))
