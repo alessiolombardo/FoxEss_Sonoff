@@ -1,6 +1,6 @@
 from collections import deque
 from ansi2html import Ansi2HTMLConverter
-from flask import Flask, redirect
+from flask import Flask, redirect, send_from_directory
 
 from FoxEss_Sonoff import main
 from FoxEss_Sonoff.sonoff_api import SonoffApi
@@ -62,6 +62,11 @@ def switch_off():
     sonoff = SonoffApi.getsonoff(main.sonoffDeviceType, init=False)
     sonoff.switch_off()
     return redirect("/")
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(app.root_path,'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
 
 def tail(filename, n=100):
