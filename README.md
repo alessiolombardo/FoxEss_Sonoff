@@ -19,9 +19,7 @@ The software currently runs on an [Arietta G25](https://www.acmesystems.it/ariet
 ### Configuration
 
 Open **settings.py** and set:
-- FoxEss username and password (already MD5 encrypted!)
-- FoxEss device ID
-- Sonoff device host IP
+- FoxEss Open API Key (to generate it, go to Foxcloud personal center -> "User profile" -> "API Management")
 - Sonoff device ID and device (api) key (to discover them, connect the Sonoff via [Compatible Pairing Mode](https://sonoff.tech/diy-developer/#:~:text=Entering%20the%20Compatible%20Pairing%20Mode,mobile%20phone%20or%20PC) and visits ``http://10.10.7.1/device``)
 - Sonoff device type (you can choose ``BASIC_R2``, ``BASIC_R3`` or ``BASIC_R3_DIY``)
 - Thresholds of FoxEss values (``FEED_IN_MIN``, ``SOLAR_PROD_MIN``, ``BAT_DISCARGE_MAX``, ``SOC_MIN`` and possible others)
@@ -64,8 +62,8 @@ A simple web application (on port 80) show the log of the application and allows
 
 ### Acknowledgements and Sources
 
-- For Sonoff Basic non-DIY API and web log: [https://github.com/dhanar10/sonoff-basicr2](https://github.com/dhanar10/sonoff-basicr2)
-- For FoxEss API: [https://github.com/nathanmarlor/foxess_em/tree/main/custom_components/foxess_em/fox](https://github.com/nathanmarlor/foxess_em/tree/main/custom_components/foxess_em/fox)
+- Sonoff Basic non-DIY API and web log: [https://github.com/dhanar10/sonoff-basicr2](https://github.com/dhanar10/sonoff-basicr2)
+- FoxEss Cloud Open API: [https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html](https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html)
 
 ### Testing
 
