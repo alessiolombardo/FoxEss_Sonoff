@@ -4,10 +4,8 @@ TIMESTEP = 5  # minutes
 WEB_LOG_PORT = 80
 WEB_LOG_MAX_LEN = 1000
 
-# FoxEss login settings
-foxEssUsername = "USERNAME"
-foxEssMd5Password = "00000000000000000000000000000000"  # Md5 encrypted password. Do not insert password in clear text
-foxEssDeviceId = "00000000-0000-0000-0000-000000000000"
+# FoxEss cloud settings
+foxEssApiKey = "00000000-0000-0000-0000-000000000000"
 
 # Sonoff device settings
 sonoffDeviceHost = "192.168.178.46"
