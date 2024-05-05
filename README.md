@@ -68,5 +68,7 @@ A simple web application (on port 80) show the log of the application and allows
 ### Testing
 
 - Windows 11, Python 3.12.1
+- Windows 10, Python 3.11.7
 - Windows 7 x64, Python 3.7.6
 - Linux Debian 10 armel on Arietta G25 SoC, Python 3.7.3
+- Linux Ubuntu 23.10 LXC on Proxmox VE
