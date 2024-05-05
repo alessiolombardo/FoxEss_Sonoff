@@ -1,7 +1,7 @@
 # General settings
 LOG_FILENAME = "log.txt"
 TIMESTEP = 5  # minutes
-WEB_LOG_PORT = 80
+WEB_INFO_PORT = 80
 WEB_LOG_MAX_LEN = 1000
 
 # FoxEss cloud settings
