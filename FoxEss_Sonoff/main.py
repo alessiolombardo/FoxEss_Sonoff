@@ -2,6 +2,8 @@
 
 import sys
 import os
+import re
+import datetime
 import asyncio
 import time
 import logging.config
@@ -9,7 +11,7 @@ import coloredlogs
 from threading import Thread
 
 sys.path.append('../')
-from FoxEss_Sonoff.settings import LOG_FILENAME, TIMESTEP, WEB_INFO_PORT, FEED_IN_MIN, SOLAR_PROD_MIN, BAT_DISCARGE_MAX, SOC_MIN
+from FoxEss_Sonoff.settings import LOG_FILENAME, TIMESTEP, WEB_INFO_PORT, FEED_IN_MIN, SOLAR_PROD_MIN, BAT_DISCARGE_MAX, SOC_MIN, ACTIVATION_TIME_RANGE
 from FoxEss_Sonoff.settings import sonoffDeviceType, foxEssApiKey
 from FoxEss_Sonoff import fox_cloud_api
 from FoxEss_Sonoff import web_info
@@ -36,10 +38,17 @@ def main():
     sonoff = SonoffApi.getsonoff(sonoffDeviceType)
 
     foxdata = dict({"timestamp":-1}, **{x:-1 for x in variables})
+    
+    activation_times=[int(x) for x in re.split("-|:",ACTIVATION_TIME_RANGE)]
 
     while True:
 
         try:
+            
+            now=datetime.datetime.now()
+            activation_times_start = now.replace(hour=activation_times[0],minute=activation_times[1])
+            activation_times_stop = now.replace(hour=activation_times[2],minute=activation_times[3])
+            
             response = asyncio.run(fox_client.realtime_data_query(variables))
        
             for i, _ in enumerate(response[0]["datas"]): 
@@ -61,6 +70,10 @@ def main():
             elif foxdata["solarProduction"] < SOLAR_PROD_MIN and sonoff.state == 1:
                 logging.info("CONDITION 3 - SONOFF CHANGE STATE: ON TO OFF")
                 sonoff.switch_off()
+            elif (now<activation_times_start or now>=activation_times_stop):               
+                if sonoff.state == 1:
+                    logging.info("CONDITION 4 - SONOFF CHANGE STATE: ON TO OFF")
+                    sonoff.switch_off()
 
         except Exception as ex:
             logging.error(type(ex).__name__ if not str(ex) else ex)          
