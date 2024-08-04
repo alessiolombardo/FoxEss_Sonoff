@@ -39,15 +39,19 @@ def main():
 
     foxdata = dict({"timestamp":-1}, **{x:-1 for x in variables})
     
-    activation_times=[int(x) for x in re.split("-|:",ACTIVATION_TIME_RANGE)]
+    activation_times = [int(x) for x in re.split("-|:", ACTIVATION_TIME_RANGE)]
 
     while True:
+        
+        now = datetime.datetime.now()
+        activation_times_start = now.replace(hour=activation_times[0], minute=activation_times[1])
+        activation_times_stop = now.replace(hour=activation_times[2], minute=activation_times[3])
+        
+        if (now < activation_times_start or now >= activation_times_stop) and sonoff.state == 1:
+                logging.info("CONDITION 4 - SONOFF CHANGE STATE: ON TO OFF")
+                sonoff.switch_off()
 
         try:
-            
-            now=datetime.datetime.now()
-            activation_times_start = now.replace(hour=activation_times[0],minute=activation_times[1])
-            activation_times_stop = now.replace(hour=activation_times[2],minute=activation_times[3])
             
             response = asyncio.run(fox_client.realtime_data_query(variables))
        
@@ -70,10 +74,9 @@ def main():
             elif foxdata["solarProduction"] < SOLAR_PROD_MIN and sonoff.state == 1:
                 logging.info("CONDITION 3 - SONOFF CHANGE STATE: ON TO OFF")
                 sonoff.switch_off()
-            elif (now<activation_times_start or now>=activation_times_stop):               
-                if sonoff.state == 1:
-                    logging.info("CONDITION 4 - SONOFF CHANGE STATE: ON TO OFF")
-                    sonoff.switch_off()
+            elif (now < activation_times_start or now >= activation_times_stop) and sonoff.state == 1:
+                logging.info("CONDITION 4 - SONOFF CHANGE STATE: ON TO OFF")
+                sonoff.switch_off()
 
         except Exception as ex:
             logging.error(type(ex).__name__ if not str(ex) else ex)          
