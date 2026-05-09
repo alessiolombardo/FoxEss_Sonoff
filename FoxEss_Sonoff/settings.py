@@ -6,9 +6,10 @@ WEB_LOG_MAX_LEN = 1000
 
 # FoxEss cloud settings
 foxEssApiKey = "00000000-0000-0000-0000-000000000000"
+foxEssInverterSN = "AAAAAAAAAAAAAAA"
 
 # Sonoff device settings
-sonoffDeviceHost = "192.168.178.46"
+sonoffDeviceHost = "192.168.0.99"
 sonoffDeviceId = "0000000000"  # In Compatible Pairing Mode visits "http://10.10.7.1/device"
 sonoffDeviceKey = "00000000-0000-0000-0000-000000000000"  # In Compatible Pairing Mode, visits "http://10.10.7.1/device"
 sonoffDeviceType = "BASIC_R3_DIY"  # Compatible devices: "BASIC_R2", "BASIC_R3" or "BASIC_R3_DIY"

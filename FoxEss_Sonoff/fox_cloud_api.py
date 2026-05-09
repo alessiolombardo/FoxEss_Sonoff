@@ -6,8 +6,7 @@ import hashlib
 import time
 
 FOXESS_BASE_URI = "https://www.foxesscloud.com"
-FOXESS_DEVICE_URI = "/op/v0/device/list"
-FOXESS_REALTIME_URI = "/op/v0/device/real/query"
+FOXESS_REALTIME_URI = "/op/v1/device/real/query"
 FOXESS_INVALID_HEADER_PARAM = 40256
 FOXESS_INVALID_BODY_PARAM = 40257
 FOXESS_OVERLOAD = 40400
@@ -15,7 +14,7 @@ FOXESS_TIMEOUT = 30
 FOXESS_OK = 0
 FOXESS_RETRIES = 5
 FOXESS_RETRY_DELAY = 10
-FOXESS_HEADER_DATA = {"User-Agent": "Mozilla/5.0", 'lang': 'en'}
+FOXESS_HEADER_DATA = {"User-Agent": "Mozilla/5.0", "Content-Type": "application/json", 'lang': 'en'}
 
 
 class FoxCloudApiClient:
@@ -68,6 +67,6 @@ class FoxCloudApiClient:
         else:
             raise Exception(f"FOXESS Exception - HTTP Status {response.status}")
 
-    async def realtime_data_query(self, variables: list) -> dict:
-        response = await self.async_post_data(FOXESS_REALTIME_URI, {"variables": variables})
+    async def realtime_data_query(self, inverter_sn, variables: list) -> dict:
+        response = await self.async_post_data(FOXESS_REALTIME_URI, {"sns": [inverter_sn], "variables": variables})
         return response

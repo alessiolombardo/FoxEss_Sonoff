@@ -12,7 +12,7 @@ from threading import Thread
 
 sys.path.append('../')
 from FoxEss_Sonoff.settings import LOG_FILENAME, TIMESTEP, WEB_INFO_PORT, FEED_IN_MIN, SOLAR_PROD_MIN, BAT_DISCARGE_MAX, SOC_MIN, ACTIVATION_TIME_RANGE
-from FoxEss_Sonoff.settings import sonoffDeviceType, foxEssApiKey
+from FoxEss_Sonoff.settings import sonoffDeviceType, foxEssApiKey, foxEssInverterSN
 from FoxEss_Sonoff import fox_cloud_api
 from FoxEss_Sonoff import web_info
 from FoxEss_Sonoff.sonoff_api import SonoffApi, SonoffModel
@@ -53,7 +53,7 @@ def main():
 
         try:
             
-            response = asyncio.run(fox_client.realtime_data_query(variables))
+            response = asyncio.run(fox_client.realtime_data_query(foxEssInverterSN, variables))
        
             for i, _ in enumerate(response[0]["datas"]): 
                 foxdata[response[0]["datas"][i]["variable"]] = round(response[0]["datas"][i]["value"], 3)
